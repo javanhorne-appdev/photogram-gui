@@ -1,0 +1,52 @@
+<h1>Photo Details</h1>
+<dl>
+  <dt>Image</dt>
+      <dd><img src="<%=@the_photo.image%>"></dd>
+  <dt>Caption</dt>
+      <dd><%=@the_photo.caption%></dd>
+  <dt>Owner</dt>
+      <dd><%=User.where({:id => @the_photo.owner_id}).first.username%></dd>
+  <dt>Posted</dt>
+      <dd><%= (Date.today.year * 12 + Date.today.month) - (@the_photo.created_at.year * 12 + @the_photo.created_at.month) %> months ago</dd>
+  <dt>Edit photo</dt>
+      <dd>
+        <form action="/update_photo/<%=@the_photo.id%>%">
+          <label for="browser_image">Image</label>
+          <input id="browser_image" type="text" name="input_image" placeholder="Enter a URL for the image..." value="<%=@the_photo.image%>">
+          <label for="browser_caption">Caption</label>
+          <textarea for="browser_caption" name="input_caption" placeholder="Enter a caption for the photo..."><%=@the_photo.caption%></textarea>
+          <button>Update photo</button>
+        </form>
+      </dd>
+  <dt>Delete photo</dt>
+      <dd><a href="/delete_photo/<%=@the_photo.id%>">Delete this photo</a></dd>
+</dl>
+
+<h2>Comments</h2>
+<table>
+  <tbody>
+    <tr>
+      <th>Commenter</th>
+      <th>Comment</th>
+      <th>Posted</th>
+    </tr>
+    <%Comment.where({ :photo_id => @the_photo.id}).each do |comment|%>
+     <tr>
+      <td><%=User.where({:id => comment.author_id}).first.username%></td>
+      <td><%=comment.body%></td>
+      <td><%=comment.created_at%></td>
+     </tr>
+    <%end%>
+  </tbody>
+</table>
+
+<h3>Add a new comment</h3>
+<form action="/insert_comment">
+  <label for="browser_photo_id">Photo ID</label>
+  <input id="browser_photo_id" type="text" name="input_photo_id" value="<%=@the_photo.id%>">
+  <label for="browser_author_id">Author ID</label>
+  <input id="browser_author_id" type="text" name="input_author_id">
+  <label for="browser_comment">Comment</label>
+  <textarea id="browser_comment" name="input_body" placeholder="Enter a comment..."></textarea>
+  <button>Add comment</button>
+</form>

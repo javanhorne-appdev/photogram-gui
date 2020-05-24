@@ -1,0 +1,32 @@
+<h1>List of photos</h1>
+<form action="/insert_photo">
+  <label for="browser_photo_link">Image</label>
+  <input id="browser_photo_link" type="text" name="input_photo_link">
+  <label for="browser_caption">Caption</label>
+  <textarea id="browser_caption" name="input_caption" placeholder="Enter a caption for the photo..."></textarea>
+  <label for="browser_owner_id">Owner ID</label>
+  <input id="browser_owner_id" type="text" name="input_owner_id">
+  <button>Add photo</button>
+</form>
+<hr>
+
+<table border="1">
+  <tbody>
+    <tr>
+      <th>Image</th>
+      <th>Caption</th>
+      <th>Owner</th>
+      <th>Posted</th>
+      <th></th>
+    </tr>
+    <%Photo.all.order({:created_at => :desc}).each do |photo|%>
+      <tr>
+        <td><img src="<%=photo.image%>"></td>
+        <td><%=photo.caption%></td>
+        <td><%=User.where({:id => photo.owner_id}).first.username%></td>
+        <td><%=photo.created_at%></td>
+        <td><a href="/photos/<%=photo.id%>">Show details</a></td>
+      </tr>
+    <%end%>
+  </tbody>
+</table>
